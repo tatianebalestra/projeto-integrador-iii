@@ -23,6 +23,12 @@ type PatientReport = {
     cid: string;
     birthday: string;
     guardian: string;
+    doctor: string;
+    doc_doctor: string;
+    expertise: string;
+    gender: string;
+    city: string;
+    uf: string;
     reports: Report[];
   };
 

@@ -13,6 +13,13 @@ type Patient = {
   birthday: string
   guardian: string
   report: string
+  doctor: string
+  doc_doctor: string
+  expertise: string
+  gender: string
+  city: string
+  uf: string
+
 }
 
 
@@ -61,7 +68,7 @@ export default function Patients() {
 
   // Handle patient deletion
   const handleDelete = async (id: number) => {
-    if (!window.confirm('Are you sure you want to delete this patient?')) return
+    if (!window.confirm('Tem certeza que deseja excluir paciente? Esta ação não poderá ser desfeita')) return
     
     try {
       const { error } = await supabase
@@ -72,7 +79,7 @@ export default function Patients() {
       if (error) throw error
       setPatients(patients.filter(patient => patient.id !== id))
     } catch (error) {
-      console.error('Error deleting patient:', error)
+      console.error('Erro ao deletar paciente:', error)
     }
   }
 
@@ -91,7 +98,13 @@ export default function Patients() {
           name: editingPatient.name,
           age: editingPatient.age,
           birthday: editingPatient.birthday,
-          guardian: editingPatient.guardian
+          guardian: editingPatient.guardian,
+          gender: editingPatient.gender,
+          doctor: editingPatient.doctor,
+          doc_doctor: editingPatient.doc_doctor,
+          expertise: editingPatient.expertise,
+          city: editingPatient.city,
+          uf: editingPatient.uf
         };
   
         // Only include doc if it's changed
@@ -134,7 +147,13 @@ export default function Patients() {
             doc: editingPatient.doc,
             cid: editingPatient.cid,
             birthday: editingPatient.birthday,
-            guardian: editingPatient.guardian
+            guardian: editingPatient.guardian,
+            gender: editingPatient.gender,
+            doctor: editingPatient.doctor,
+            doc_doctor: editingPatient.doc_doctor,
+            expertise: editingPatient.expertise,
+            city: editingPatient.city,
+            uf: editingPatient.uf
           }])
           .select();
   
@@ -145,10 +164,10 @@ export default function Patients() {
       setIsModalOpen(false);
       setEditingPatient(null);
     } catch (error) {
-      console.error('Error saving patient:', error);
+      console.error('Erro ao salvar paciente:', error);
       alert(
          
-        'Failed to save patient. Please check for duplicate document numbers.'
+        'Ocorreu uma falha ao salvar o paciente. Por favor verifique os dados e tente novamente.'
       );
     }
   };
@@ -180,6 +199,12 @@ export default function Patients() {
               birthday: '',
               guardian: '',
               report:'',
+              doctor:'',
+              doc_doctor:'',
+              expertise:'',
+              gender:'',
+              city:'',
+              uf:''
             })
             setIsModalOpen(true)
           }}
@@ -217,8 +242,14 @@ export default function Patients() {
                 <th className="px-4 py-3 border border-blue-700">Idade</th>
                 <th className="px-4 py-3 border border-blue-700">CPF</th>
                 <th className="px-4 py-3 border border-blue-700">CID</th>
+                <th className="px-4 py-3 border border-blue-700">Gênero</th>
                 <th className="px-4 py-3 border border-blue-700">Data de Nascimento</th>
                 <th className="px-4 py-3 border border-blue-700">Responsável</th>
+                <th className="px-4 py-3 border border-blue-700">Médico</th>
+                <th className="px-4 py-3 border border-blue-700">Documento do Médico</th>
+                <th className="px-4 py-3 border border-blue-700">Especialidade</th>
+                <th className="px-4 py-3 border border-blue-700">Cidade</th>
+                <th className="px-4 py-3 border border-blue-700">UF</th>
                 <th className="px-4 py-3 border border-blue-700">Ações</th>
               </tr>
             </thead>
@@ -237,8 +268,14 @@ export default function Patients() {
                     <td className="px-4 py-2 border border-blue-700">{patient.age}</td>
                     <td className="px-4 py-2 border border-blue-700">{patient.doc}</td>
                     <td className="px-4 py-2 border border-blue-700">{patient.cid}</td>
+                    <td className="px-4 py-2 border border-blue-700">{patient.gender}</td>
                     <td className="px-4 py-2 border border-blue-700">{patient.birthday}</td>
                     <td className="px-4 py-2 border border-blue-700">{patient.guardian}</td>
+                    <td className="px-4 py-2 border border-blue-700">{patient.doctor}</td>
+                    <td className="px-4 py-2 border border-blue-700">{patient.doc_doctor}</td>
+                    <td className="px-4 py-2 border border-blue-700">{patient.expertise}</td>
+                    <td className="px-4 py-2 border border-blue-700">{patient.city}</td>
+                    <td className="px-4 py-2 border border-blue-700">{patient.uf}</td>
                     <td className="px-1 py-2 border border-blue-700">
                     <button
                       onClick={() => {
@@ -272,110 +309,208 @@ export default function Patients() {
 
       {/* Patient Form Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center p-4 bg-black bg-opacity-50">
-            <div className="w-full max-w-md p-6 border-t-4 border-orange-500 rounded-lg bg-blue-50">
-            <h2 className="mb-4 text-xl font-bold">
-              {editingPatient?.id ? 'Editar Paciente' : 'Adicionar Paciente'}
-            </h2>
-            <form onSubmit={handleSubmit}>
-              <div className="space-y-4 ">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Nome</label>
-                  <input
-                    type="text"
-                    className="block w-full p-2 mt-1 border border-orange-300 rounded-md bg-orange-50"
-                    value={editingPatient?.name || ''}
-                    onChange={(e) => setEditingPatient({
-                      ...editingPatient!,
-                      name: e.target.value
-                    })}
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Idade</label>
-                  <input
-                    type="number"
-                    className="block w-full p-2 mt-1 border border-orange-300 rounded-md bg-orange-50"
-                    value={editingPatient?.age || 0}
-                    onChange={(e) => setEditingPatient({
-                      ...editingPatient!,
-                      age: parseInt(e.target.value) || 0
-                    })}
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">CPF</label>
-                  <input
-                    type="text"
-                    className="block w-full p-2 mt-1 border border-orange-300 rounded-md bg-orange-50"
-                    value={editingPatient?.doc || ''}
-                    onChange={(e) => setEditingPatient({
-                      ...editingPatient!,
-                      doc: e.target.value
-                    })}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">CID</label>
-                  <input
-                    type="text"
-                    className="block w-full p-2 mt-1 border border-orange-300 rounded-md bg-orange-50"
-                    value={editingPatient?.cid || ''}
-                    onChange={(e) => setEditingPatient({
-                      ...editingPatient!,
-                      cid: e.target.value
-                    })}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Data de Nascimento</label>
-                  <input
-                    type="date"
-                    className="block w-full p-2 mt-1 border border-orange-300 rounded-md bg-orange-50"
-                    value={editingPatient?.birthday || ''}
-                    onChange={(e) => setEditingPatient({
-                      ...editingPatient!,
-                      birthday: e.target.value
-                    })}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Responsável</label>
-                  <input
-                    type="text"
-                    className="block w-full p-2 mt-1 border border-orange-300 rounded-md bg-orange-50"
-                    value={editingPatient?.guardian || ''}
-                    onChange={(e) => setEditingPatient({
-                      ...editingPatient!,
-                      guardian: e.target.value
-                    })}
-                  />
-                </div>
+  <div className="fixed inset-0 flex items-center justify-center p-4 bg-black bg-opacity-50">
+    <div className="w-full max-w-4xl p-6 border-t-4 border-orange-500 rounded-lg bg-blue-50">
+      <h2 className="mb-4 text-xl font-bold">
+        {editingPatient?.id ? 'Editar Paciente' : 'Adicionar Paciente'}
+      </h2>
+      <form onSubmit={handleSubmit}>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {/* Column 1 */}
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Nome</label>
+              <input
+                type="text"
+                className="block w-full p-2 mt-1 border border-orange-300 rounded-md bg-orange-50"
+                value={editingPatient?.name || ''}
+                onChange={(e) => setEditingPatient({
+                  ...editingPatient!,
+                  name: e.target.value
+                })}
+                required
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Idade</label>
+              <input
+                type="number"
+                className="block w-full p-2 mt-1 border border-orange-300 rounded-md bg-orange-50"
+                value={editingPatient?.age || 0}
+                onChange={(e) => setEditingPatient({
+                  ...editingPatient!,
+                  age: parseInt(e.target.value) || 0
+                })}
+                required
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700">CPF</label>
+              <input
+                type="text"
+                className="block w-full p-2 mt-1 border border-orange-300 rounded-md bg-orange-50"
+                value={editingPatient?.doc || ''}
+                onChange={(e) => setEditingPatient({
+                  ...editingPatient!,
+                  doc: e.target.value
+                })}
+              />
+            </div>
+          </div>
+          
+          {/* Column 2 */}
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">CID</label>
+              <input
+                type="text"
+                className="block w-full p-2 mt-1 border border-orange-300 rounded-md bg-orange-50"
+                value={editingPatient?.cid || ''}
+                onChange={(e) => setEditingPatient({
+                  ...editingPatient!,
+                  cid: e.target.value
+                })}
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Gênero</label>
+              <input
+                type="text"
+                className="block w-full p-2 mt-1 border border-orange-300 rounded-md bg-orange-50"
+                value={editingPatient?.gender || ''}
+                onChange={(e) => setEditingPatient({
+                  ...editingPatient!,
+                  gender: e.target.value
+                })}
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Data Nasc.</label>
+              <input
+                type="date"
+                className="block w-full p-2 mt-1 border border-orange-300 rounded-md bg-orange-50"
+                value={editingPatient?.birthday || ''}
+                onChange={(e) => setEditingPatient({
+                  ...editingPatient!,
+                  birthday: e.target.value
+                })}
+              />
+            </div>
+          </div>
+          
+          {/* Column 3 */}
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Responsável</label>
+              <input
+                type="text"
+                className="block w-full p-2 mt-1 border border-orange-300 rounded-md bg-orange-50"
+                value={editingPatient?.guardian || ''}
+                onChange={(e) => setEditingPatient({
+                  ...editingPatient!,
+                  guardian: e.target.value
+                })}
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Médico</label>
+              <input
+                type="text"
+                className="block w-full p-2 mt-1 border border-orange-300 rounded-md bg-orange-50"
+                value={editingPatient?.doctor || ''}
+                onChange={(e) => setEditingPatient({
+                  ...editingPatient!,
+                  doctor: e.target.value
+                })}
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700">CRM</label>
+              <input
+                type="text"
+                className="block w-full p-2 mt-1 border border-orange-300 rounded-md bg-orange-50"
+                value={editingPatient?.doc_doctor || ''}
+                onChange={(e) => setEditingPatient({
+                  ...editingPatient!,
+                  doc_doctor: e.target.value
+                })}
+              />
+            </div>
+          </div>
+          
+          {/* Full width fields at bottom */}
+          <div className="space-y-4 md:col-span-2 lg:col-span-3">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Especialidade</label>
+              <input
+                type="text"
+                className="block w-full p-2 mt-1 border border-orange-300 rounded-md bg-orange-50"
+                value={editingPatient?.expertise || ''}
+                onChange={(e) => setEditingPatient({
+                  ...editingPatient!,
+                  expertise: e.target.value
+                })}
+              />
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Cidade</label>
+                <input
+                  type="text"
+                  className="block w-full p-2 mt-1 border border-orange-300 rounded-md bg-orange-50"
+                  value={editingPatient?.city || ''}
+                  onChange={(e) => setEditingPatient({
+                    ...editingPatient!,
+                    city: e.target.value
+                  })}
+                />
               </div>
-              <div className="flex justify-end mt-6 space-x-3">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsModalOpen(false)
-                    setEditingPatient(null)
-                  }}
-                  className="px-4 py-2 bg-gray-200 border border-gray-300 rounded-md hover:bg-gray-300"
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 text-white transition-colors bg-blue-500 rounded-md hover:bg-orange-600"
-                >
-                  Salvar
-                </button>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700">UF</label>
+                <input
+                  type="text"
+                  className="block w-full p-2 mt-1 border border-orange-300 rounded-md bg-orange-50"
+                  value={editingPatient?.uf || ''}
+                  onChange={(e) => setEditingPatient({
+                    ...editingPatient!,
+                    uf: e.target.value
+                  })}
+                />
               </div>
-            </form>
+            </div>
           </div>
         </div>
-      )}
+        
+        <div className="flex justify-end mt-6 space-x-3">
+          <button
+            type="button"
+            onClick={() => {
+              setIsModalOpen(false)
+              setEditingPatient(null)
+            }}
+            className="px-4 py-2 bg-gray-200 border border-gray-300 rounded-md hover:bg-gray-300"
+          >
+            Cancelar
+          </button>
+          <button
+            type="submit"
+            className="px-4 py-2 text-white bg-orange-600 rounded-md hover:bg-orange-700"
+          >
+            Salvar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+)}
     </div>
     </div>
   )
