@@ -59,7 +59,7 @@ export default function PatientReport() {
           reports: data.reports || []
         });
       } catch (error) {
-        console.error('Error fetching patient:', error);
+        console.error('Erro ao buscar paciente:', error);
       } finally {
         setLoading(false);
       }
@@ -100,7 +100,7 @@ export default function PatientReport() {
         content: ''
       });
     } catch (error) {
-      console.error('Error adding report:', error);
+      console.error('Erro ao adicionar relatório:', error);
     } finally {
       setLoading(false);
     }
@@ -152,19 +152,19 @@ export default function PatientReport() {
               />
             </div>
           </div>
-          <div className="mb-4">
-            <label className="block mb-1 text-sm font-medium text-gray-700 ">
-              Relatório
-            </label>
-            <textarea
-              className="w-full p-2 border bg-orange-100 border border-orange-300 rounded-md min-h-[150px]"
-              value={newReport.content}
-              onChange={(e) =>
-                setNewReport({ ...newReport, content: e.target.value })
-              }
-              required
-            />
-          </div>
+            <div className="mb-4">
+              <label className="block mb-1 text-sm font-medium text-gray-700 ">
+                Relatório
+              </label>
+              <textarea
+                className="w-full p-2 border bg-orange-100 border border-orange-300 rounded-md min-h-[150px]"
+                value={newReport.content}
+                onChange={(e) =>
+                  setNewReport({ ...newReport, content: e.target.value })
+                }
+                required
+              />
+            </div>
           <button
             type="submit"
             disabled={loading}

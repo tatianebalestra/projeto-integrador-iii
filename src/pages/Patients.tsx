@@ -11,6 +11,7 @@ type Patient = {
   doc: string
   cid: string
   birthday: string
+  medical_convenience: string
   guardian: string
   report: string
   doctor: string
@@ -52,7 +53,7 @@ export default function Patients() {
         if (error) throw error
         setPatients(data || [])
       } catch (error) {
-        console.error('Error fetching patients:', error)
+        console.error('Erro ao buscar paciente:', error)
       } finally {
         setLoading(false)
       }
@@ -100,6 +101,7 @@ export default function Patients() {
           birthday: editingPatient.birthday,
           guardian: editingPatient.guardian,
           gender: editingPatient.gender,
+          medical_convenience: editingPatient.medical_convenience,
           doctor: editingPatient.doctor,
           doc_doctor: editingPatient.doc_doctor,
           expertise: editingPatient.expertise,
@@ -149,6 +151,7 @@ export default function Patients() {
             birthday: editingPatient.birthday,
             guardian: editingPatient.guardian,
             gender: editingPatient.gender,
+            medical_convenience: editingPatient.medical_convenience,
             doctor: editingPatient.doctor,
             doc_doctor: editingPatient.doc_doctor,
             expertise: editingPatient.expertise,
@@ -185,7 +188,7 @@ export default function Patients() {
               onClick={handleLogout}
               className="absolute top-2.5 right-2.5 px-5 py-2 rounded bg-red-500 text-white cursor-pointer hover:bg-red-600 transition-colors"
             >
-              Sign out
+              Sair
             </button>
           </div>
         <button
@@ -199,6 +202,7 @@ export default function Patients() {
               birthday: '',
               guardian: '',
               report:'',
+              medical_convenience:'',
               doctor:'',
               doc_doctor:'',
               expertise:'',
@@ -234,23 +238,24 @@ export default function Patients() {
           <div className="w-12 h-12 border-t-2 border-b-2 border-blue-500 rounded-full animate-spin"></div>
         </div>
       ) : (
-        <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-blue-200">
+        <div className="w-full overflow-x-scroll">
+          <table className="w-full bg-white border border-blue-200">
             <thead>
               <tr className="bg-blue-300">
-                <th className="px-4 py-3 border border-blue-700">Nome</th>
-                <th className="px-4 py-3 border border-blue-700">Idade</th>
-                <th className="px-4 py-3 border border-blue-700">CPF</th>
-                <th className="px-4 py-3 border border-blue-700">CID</th>
-                <th className="px-4 py-3 border border-blue-700">Gênero</th>
-                <th className="px-4 py-3 border border-blue-700">Data de Nascimento</th>
-                <th className="px-4 py-3 border border-blue-700">Responsável</th>
-                <th className="px-4 py-3 border border-blue-700">Médico</th>
-                <th className="px-4 py-3 border border-blue-700">Documento do Médico</th>
-                <th className="px-4 py-3 border border-blue-700">Especialidade</th>
-                <th className="px-4 py-3 border border-blue-700">Cidade</th>
-                <th className="px-4 py-3 border border-blue-700">UF</th>
-                <th className="px-4 py-3 border border-blue-700">Ações</th>
+                <th className="px-2 py-3 border border-blue-700">Nome</th>
+                <th className="px-2 py-3 border border-blue-700">Idade</th>
+                <th className="px-2 py-3 border border-blue-700">CPF</th>
+                <th className="px-2 py-3 border border-blue-700">CID</th>
+                <th className="px-2 py-3 border border-blue-700">Gênero</th>
+                <th className="px-2 py-3 border border-blue-700">Data de Nasc.</th>
+                <th className="px-2 py-3 border border-blue-700">Responsável</th>
+                <th className="px-2 py-3 border border-blue-700">Convênio</th>
+                <th className="px-2 py-3 border border-blue-700">Médico</th>
+                <th className="px-2 py-3 border border-blue-700">CRM</th>
+                <th className="px-2 py-3 border border-blue-700">Especialidade</th>
+                <th className="px-2 py-3 border border-blue-700">Cidade</th>
+                <th className="px-2 py-3 border border-blue-700">UF</th>
+                <th className="px-2 py-3 border border-blue-700">Ações</th>
               </tr>
             </thead>
             <tbody>
@@ -265,17 +270,18 @@ export default function Patients() {
                         {patient.name}
                       </Link>
                     </td>
-                    <td className="px-4 py-2 border border-blue-700">{patient.age}</td>
-                    <td className="px-4 py-2 border border-blue-700">{patient.doc}</td>
-                    <td className="px-4 py-2 border border-blue-700">{patient.cid}</td>
-                    <td className="px-4 py-2 border border-blue-700">{patient.gender}</td>
-                    <td className="px-4 py-2 border border-blue-700">{patient.birthday}</td>
-                    <td className="px-4 py-2 border border-blue-700">{patient.guardian}</td>
-                    <td className="px-4 py-2 border border-blue-700">{patient.doctor}</td>
-                    <td className="px-4 py-2 border border-blue-700">{patient.doc_doctor}</td>
-                    <td className="px-4 py-2 border border-blue-700">{patient.expertise}</td>
-                    <td className="px-4 py-2 border border-blue-700">{patient.city}</td>
-                    <td className="px-4 py-2 border border-blue-700">{patient.uf}</td>
+                    <td className="px-2 py-2 border border-blue-700">{patient.age}</td>
+                    <td className="px-2 py-2 border border-blue-700">{patient.doc}</td>
+                    <td className="px-2 py-2 border border-blue-700">{patient.cid}</td>
+                    <td className="px-2 py-2 border border-blue-700">{patient.gender}</td>
+                    <td className="px-2 py-2 border border-blue-700">{patient.birthday}</td>
+                    <td className="px-2 py-2 border border-blue-700">{patient.guardian}</td>
+                    <td className="px-2 py-2 border border-blue-700">{patient.medical_convenience}</td>
+                    <td className="px-2 py-2 border border-blue-700">{patient.doctor}</td>
+                    <td className="px-2 py-2 border border-blue-700">{patient.doc_doctor}</td>
+                    <td className="px-2 py-2 border border-blue-700">{patient.expertise}</td>
+                    <td className="px-2 py-2 border border-blue-700">{patient.city}</td>
+                    <td className="px-2 py-2 border border-blue-700">{patient.uf}</td>
                     <td className="px-1 py-2 border border-blue-700">
                     <button
                       onClick={() => {
@@ -316,7 +322,6 @@ export default function Patients() {
       </h2>
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {/* Column 1 */}
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700">Nome</label>
@@ -360,7 +365,6 @@ export default function Patients() {
             </div>
           </div>
           
-          {/* Column 2 */}
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700">CID</label>
@@ -402,7 +406,6 @@ export default function Patients() {
             </div>
           </div>
           
-          {/* Column 3 */}
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700">Responsável</label>
@@ -444,8 +447,7 @@ export default function Patients() {
             </div>
           </div>
           
-          {/* Full width fields at bottom */}
-          <div className="space-y-4 md:col-span-2 lg:col-span-3">
+          <div className="grid grid-cols-2 gap-4 md:col-span-2 lg:col-span-3">
             <div>
               <label className="block text-sm font-medium text-gray-700">Especialidade</label>
               <input
@@ -457,6 +459,26 @@ export default function Patients() {
                   expertise: e.target.value
                 })}
               />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Convênio</label>
+              <select
+                className="block w-full p-2 mt-1 border border-orange-300 rounded-md bg-orange-50 focus:ring-orange-500 focus:border-orange-500"
+                value={editingPatient?.medical_convenience || ''}
+                onChange={(e) => setEditingPatient({
+                  ...editingPatient!,
+                  medical_convenience: e.target.value
+                })}
+              >
+                <option value="">Selecione um convênio</option>
+                <option value="Unimed">Unimed</option>
+                <option value="Bradesco Saúde">Bradesco Saúde</option>
+                <option value="Amil">Amil</option>
+                <option value="SulAmérica Saúde">SulAmérica Saúde</option>
+                <option value="Hapvida">Hapvida</option>
+                <option value="Particular">Particular</option>
+              </select>
             </div>
             
             <div className="grid grid-cols-2 gap-4">
